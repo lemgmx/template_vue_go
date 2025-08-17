@@ -65,7 +65,7 @@ func GetPersonById(c *fiber.Ctx) error {
 		})
 	}
 
-	person = services.GetPersonById(id)
+	person = services.GetPersonByIdFromDB(id)
 	if person.ID == 0 {
 		return c.Status(http.StatusNotFound).JSON(fiber.Map{
 			"error":   true,

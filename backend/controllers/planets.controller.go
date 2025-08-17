@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"net/http"
 	"template_api/database"
 	"template_api/models"
 	"template_api/services"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func GetPlanets(c *fiber.Ctx) error {
@@ -31,14 +32,7 @@ func GetPlanets(c *fiber.Ctx) error {
 	var apiPlanets []models.APIPlanet
 
 	for _, planet := range planets {
-		apiPlanets = append(apiPlanets, models.APIPlanet{
-			ID:             planet.ID,
-			Name:           planet.Name,
-			Population:     planet.Population,
-			Diameter:       planet.Diameter,
-			RotationPeriod: planet.RotationPeriod,
-			OrbitalPeriod:  planet.OrbitalPeriod,
-		})
+		apiPlanets = append(apiPlanets, models.APIPlanet(planet))
 	}
 
 	return c.JSON(fiber.Map{
@@ -58,7 +52,7 @@ func GetPlanetById(c *fiber.Ctx) error {
 		})
 	}
 
-	planet = services.GetPlanetById(id)
+	planet = services.GetPlanetByIdFromDB(id)
 	if planet.ID == 0 {
 		return c.Status(http.StatusNotFound).JSON(fiber.Map{
 			"error":   true,
@@ -66,14 +60,7 @@ func GetPlanetById(c *fiber.Ctx) error {
 		})
 	}
 
-	var apiPlanet = models.APIPlanet{
-		ID:             planet.ID,
-		Name:           planet.Name,
-		Population:     planet.Population,
-		Diameter:       planet.Diameter,
-		RotationPeriod: planet.RotationPeriod,
-		OrbitalPeriod:  planet.OrbitalPeriod,
-	}
+	var apiPlanet = models.APIPlanet(planet)
 
 	return c.JSON(apiPlanet)
 }

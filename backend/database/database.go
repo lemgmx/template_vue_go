@@ -1,7 +1,6 @@
 package database
 
 import (
-	"context"
 	"template_api/models"
 
 	"gorm.io/driver/mysql"
@@ -9,7 +8,6 @@ import (
 	"gorm.io/gorm/logger"
 
 	fiberlog "github.com/gofiber/fiber/v2/log"
-	"github.com/redis/go-redis/v9"
 
 	"log"
 	"os"
@@ -17,8 +15,6 @@ import (
 )
 
 var Database *gorm.DB
-var Redis *redis.Client
-var RedisCtx = context.Background()
 
 func Connect() error {
 	var err error
@@ -51,12 +47,6 @@ func Connect() error {
 	if err != nil {
 		panic(err)
 	}
-
-	Redis = redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("APP_REDIS_HOST") + ":6379",
-		Password: os.Getenv("APP_REDIS_PASS"),
-		DB:       0, // use default DB
-	})
 
 	sqlDB, err := Database.DB()
 	if err != nil {
